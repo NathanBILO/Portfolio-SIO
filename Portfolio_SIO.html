@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nathan Bilongo — Hero B (azur)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{  --bg:#e8f4fd;--bg2:#daeef9;--bg3:#cbe8f5;--surface:#f5faff;
+  --accent:#1565c0;--accent2:#0288d1;--accent3:#e65100;
+  --text:#0d1f3c;--muted:#4a6f8a;
+  --border:rgba(21,101,192,0.2);
+  --card-shadow:0 4px 24px rgba(21,101,192,0.10);
+  --font-display:'Syne',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --font-body:'Plus Jakarta Sans',sans-serif;}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:400;line-height:1.7;overflow-x:hidden;cursor:none;}
+#cursor{position:fixed;width:12px;height:12px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:multiply;}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s;opacity:0.45;}
+body.cursor-hover #cursor{width:20px;height:20px;background:var(--accent2);}
+body.cursor-hover #cursor-ring{width:52px;height:52px;opacity:0.2;}
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.55;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:rgba(232,244,253,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--font-display);font-weight:800;font-size:1.1rem;color:var(--accent);letter-spacing:-0.02em;}
+.nav-logo span{color:var(--text);}
+.nav-links{display:flex;gap:0.25rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.82rem;letter-spacing:0.04em;font-family:var(--font-mono);padding:0.45rem 1rem;border-radius:6px;transition:background .2s,color .2s;position:relative;display:block;}
+.nav-links a::after{content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--accent);border-radius:2px;transition:width .25s;}
+.nav-links a:hover{color:var(--accent);background:rgba(21,101,192,0.08);}
+.nav-links a:hover::after,.nav-links a.active::after{width:60%;}
+.nav-links a.active{color:var(--accent);}
+.btn-primary{background:var(--accent);color:#e8f4fd;border:none;padding:0.85rem 1.75rem;border-radius:8px;font-family:var(--font-mono);font-size:0.82rem;cursor:none;text-decoration:none;transition:transform .2s,box-shadow .2s;display:inline-block;font-weight:700;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(21,101,192,0.35);}
+.btn-ghost{background:transparent;color:var(--text);border:1.5px solid var(--border);padding:0.85rem 1.75rem;border-radius:8px;font-family:var(--font-mono);font-size:0.82rem;cursor:none;text-decoration:none;transition:border-color .2s,color .2s,transform .2s;display:inline-block;}
+.btn-ghost:hover{border-color:var(--accent2);color:var(--accent2);transform:translateY(-2px);}
+section{padding:6rem 4rem;position:relative;z-index:1;}
+.section-label{font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.6rem;}
+.section-title{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:0.75rem;color:var(--text);}
+.section-sub{color:var(--muted);max-width:540px;margin-bottom:3rem;font-size:0.95rem;}
+#about{background:var(--surface);}
+.about-grid{display:grid;grid-template-columns:1fr 2fr;gap:4rem;align-items:start;}
+.about-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:2rem;display:flex;flex-direction:column;gap:0.75rem;}
+.about-info-row{display:flex;align-items:flex-start;gap:0.75rem;font-size:0.85rem;}
+.about-info-row .key{font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);min-width:90px;margin-top:0.1rem;text-transform:uppercase;letter-spacing:0.05em;}
+.about-divider{height:1px;background:var(--border);margin:0.5rem 0;}
+.about-text p{color:var(--muted);font-size:0.95rem;margin-bottom:1rem;}
+.about-text p strong{color:var(--text);}
+.value-cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.value-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.25rem;transition:transform .3s,box-shadow .3s;}
+.value-card:hover{transform:translateY(-4px);box-shadow:var(--card-shadow);}
+.value-card-icon{font-size:1.5rem;margin-bottom:0.5rem;}
+.value-card-title{font-family:var(--font-display);font-weight:700;font-size:0.95rem;margin-bottom:0.3rem;}
+.value-card-desc{font-size:0.82rem;color:var(--muted);line-height:1.5;}
+#projects{background:var(--bg);}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;}
+.project-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;overflow:hidden;transition:transform .35s cubic-bezier(0.34,1.56,0.64,1),box-shadow .35s;cursor:none;}
+.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:16px 16px 0 0;}
+.project-card.c1::before{background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.project-card.c2::before{background:linear-gradient(90deg,var(--accent2),var(--accent));}
+.project-card.c3::before{background:linear-gradient(90deg,var(--accent3),var(--accent));}
+.project-card:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 24px 60px rgba(21,101,192,0.14);}
+.project-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem;}
+.project-icon-wrap{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:rgba(21,101,192,0.12);}
+.project-status{font-family:var(--font-mono);font-size:0.68rem;padding:0.3rem 0.7rem;border-radius:100px;background:rgba(21,101,192,0.1);color:var(--accent);border:1px solid rgba(21,101,192,0.2);}
+.project-type{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem;}
+.project-title{font-family:var(--font-display);font-size:1.2rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.75rem;}
+.project-desc{font-size:0.88rem;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;}
+.project-desc strong{color:var(--text);}
+.project-details{background:var(--bg);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1.25rem;font-size:0.83rem;}
+.project-details-title{font-family:var(--font-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);margin-bottom:0.6rem;}
+.project-detail-item{display:flex;align-items:flex-start;gap:0.5rem;color:var(--muted);margin-bottom:0.35rem;line-height:1.4;}
+.project-detail-item::before{content:'▸';color:var(--accent);flex-shrink:0;}
+.project-tags{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.project-tag{background:var(--bg3);border-radius:5px;padding:0.28rem 0.65rem;font-size:0.72rem;font-family:var(--font-mono);color:var(--muted);}
+#experience{background:var(--bg);}
+.timeline{position:relative;padding-left:2.5rem;}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border);}
+.timeline-item{position:relative;margin-bottom:2.5rem;}
+.timeline-dot{position:absolute;left:-2.5rem;top:0.3rem;width:12px;height:12px;border-radius:50%;background:var(--accent);transform:translateX(-5px);box-shadow:0 0 0 4px rgba(21,101,192,0.15);}
+.timeline-dot.d2{background:var(--accent3);}
+.timeline-dot.d3{background:var(--accent2);}
+.timeline-date{font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);letter-spacing:0.08em;margin-bottom:0.25rem;}
+.timeline-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:0.15rem;}
+.timeline-company{font-size:0.85rem;color:var(--muted);margin-bottom:0.75rem;}
+.timeline-desc{font-size:0.88rem;color:var(--muted);line-height:1.65;max-width:620px;}
+.timeline-desc strong{color:var(--text);}
+.timeline-tags{display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.75rem;}
+.soft-banner{background:linear-gradient(135deg,rgba(21,101,192,0.08),rgba(21,101,192,0.04));border:1px solid rgba(21,101,192,0.15);border-radius:16px;padding:2rem 2.5rem;margin-bottom:3.5rem;display:flex;align-items:flex-start;gap:1.5rem;}
+.soft-banner-icon{font-size:2rem;flex-shrink:0;}
+.soft-banner-title{font-family:var(--font-display);font-weight:700;font-size:1.1rem;margin-bottom:0.4rem;}
+.soft-banner-desc{font-size:0.9rem;color:var(--muted);line-height:1.7;}
+.soft-banner-desc strong{color:var(--text);}
+#contact{background:var(--surface);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.contact-methods{display:flex;flex-direction:column;gap:0.75rem;margin-top:1.5rem;}
+.contact-method{display:flex;align-items:center;gap:1rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:var(--text);transition:border-color .2s,transform .2s,box-shadow .2s;cursor:none;}
+.contact-method:hover{border-color:var(--accent);transform:translateX(5px);box-shadow:var(--card-shadow);}
+.contact-icon{font-size:1.2rem;}
+.contact-label{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
+.contact-val{font-size:0.88rem;}
+.contact-form{display:flex;flex-direction:column;gap:1rem;}
+.form-group{display:flex;flex-direction:column;gap:0.35rem;}
+.form-label{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;}
+.form-input,.form-textarea{background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:0.75rem 1rem;color:var(--text);font-family:var(--font-body);font-size:0.9rem;transition:border-color .2s,box-shadow .2s;outline:none;}
+.form-input:focus,.form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(21,101,192,0.12);}
+.form-textarea{resize:vertical;min-height:120px;}
+footer{text-align:center;padding:2rem;background:var(--bg);border-top:1px solid var(--border);font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);position:relative;z-index:1;}
+footer span{color:var(--accent);}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity .7s ease,transform .7s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;} .nav-links{display:none;}
+  section{padding:4rem 1.5rem;}
+  .about-grid,.contact-grid{grid-template-columns:1fr;}
+  .value-cards,.hex-grid{grid-template-columns:1fr 1fr;}
+  body{cursor:auto;} #cursor,#cursor-ring{display:none;}
+}
+
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden;}
+.hero-content{position:relative;z-index:1;width:100%;max-width:860px;display:grid;grid-template-columns:1fr 380px;gap:4rem;align-items:center;animation:fadeSlide .7s ease both;}
+.hero-left{}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(21,101,192,.1);border:1px solid rgba(21,101,192,.25);border-radius:100px;padding:.4rem 1.1rem;font-family:var(--font-mono);font-size:.72rem;color:var(--accent);margin-bottom:1.5rem;}
+.badge-dot{width:6px;height:6px;background:var(--accent2);border-radius:50%;animation:pulse 2s infinite;}
+.hero-name{font-family:var(--font-display);font-size:clamp(2.8rem,5vw,4.5rem);font-weight:800;letter-spacing:-.04em;color:var(--accent);line-height:1;margin-bottom:.5rem;}
+.hero-role{font-family:var(--font-mono);font-size:.88rem;color:var(--muted);margin-bottom:1.5rem;}
+.hero-highlight{background:rgba(21,101,192,.07);border-left:3px solid var(--accent);padding:.9rem 1.1rem;font-size:.88rem;color:var(--text);margin-bottom:2rem;border-radius:0 8px 8px 0;}
+.hero-highlight strong{color:var(--accent);}
+.hero-ctas{display:flex;gap:.75rem;flex-wrap:wrap;}
+.id-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 16px 60px rgba(21,101,192,.12);}
+.id-card-stripe{height:5px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.id-card-body{padding:1.75rem;}
+.id-initials{width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:1.2rem;margin-bottom:1rem;}
+.id-name{font-family:var(--font-display);font-size:1.25rem;font-weight:800;margin-bottom:.2rem;}
+.id-sub{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.id-rows{display:flex;flex-direction:column;gap:.65rem;}
+.id-row{display:flex;align-items:center;gap:.75rem;font-size:.83rem;}
+.id-row-icon{width:30px;height:30px;border-radius:7px;background:rgba(21,101,192,.1);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.id-row-key{font-family:var(--font-mono);font-size:.65rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:.05em;}
+.id-row-val{font-size:.82rem;color:var(--text);}
+.id-row-val a{color:var(--accent);text-decoration:none;}
+.id-divider{height:1px;background:var(--border);margin:1rem 0;}
+.id-stats{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.id-stat{background:var(--bg);border-radius:8px;padding:.65rem;text-align:center;}
+.id-stat-n{font-family:var(--font-display);font-size:1.4rem;font-weight:800;color:var(--accent);display:block;}
+.id-stat-l{font-family:var(--font-mono);font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+@media(max-width:900px){.hero-content{grid-template-columns:1fr;}}
+
+#skills{background:var(--surface);}
+.hex-section{display:flex;flex-direction:column;align-items:center;gap:2.5rem;}
+.hex-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;width:100%;max-width:860px;margin:0 auto;}
+.hex-card{
+  aspect-ratio:1;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;cursor:none;
+  transition:transform .3s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;
+}
+.hex-card::before{
+  content:'';position:absolute;inset:0;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:rgba(21,101,192,0);transition:background .25s;
+}
+.hex-card:hover{transform:scale(1.13);}
+.hex-card:hover::before{background:rgba(21,101,192,0.2);}
+.hex-icon{font-size:1.6rem;margin-bottom:0.35rem;position:relative;z-index:1;}
+.hex-name{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);line-height:1.3;position:relative;z-index:1;transition:color .25s;}
+.hex-card:hover .hex-name{color:var(--accent);}
+
+.hex-detail-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;
+  width:100%;max-width:860px;margin:0 auto;
+}
+.hex-detail{
+  background:var(--bg);border:1px solid var(--border);border-radius:14px;
+  padding:1.5rem;
+  transition:transform .3s,box-shadow .3s,border-color .3s,background .3s;
+}
+.hex-detail.highlighted{
+  transform:translateY(-6px);
+  box-shadow:0 16px 48px rgba(21,101,192,0.18);
+  border-color:rgba(21,101,192,0.5);
+  background:rgba(21,101,192,0.05);
+}
+.hex-detail-top{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.hex-detail-icon{font-size:1.4rem;}
+.hex-detail-title{font-family:var(--font-display);font-weight:700;font-size:1rem;}
+.hex-detail-tags{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.hex-dtag{
+  font-size:0.75rem;font-family:var(--font-mono);
+  padding:0.3rem 0.7rem;border-radius:6px;
+  background:rgba(21,101,192,0.08);color:var(--accent);
+  border:1px solid rgba(21,101,192,0.2);
+  transition:background .2s,transform .2s;
+}
+.hex-dtag:hover{background:rgba(21,101,192,0.18);transform:translateY(-1px);}
+
+.certif-strip{
+  width:100%;max-width:860px;margin:0 auto;
+  background:rgba(21,101,192,0.06);border:1px solid rgba(21,101,192,0.15);
+  border-radius:14px;padding:1.5rem 2rem;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+}
+.certif-strip-item{display:flex;align-items:flex-start;gap:0.75rem;}
+.certif-strip-badge{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;flex-shrink:0;background:rgba(21,101,192,0.12);
+}
+.certif-strip-name{font-family:var(--font-display);font-weight:700;font-size:0.88rem;margin-bottom:0.2rem;}
+.certif-strip-desc{font-size:0.75rem;color:var(--muted);line-height:1.4;}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="bg-canvas"></canvas>
+<nav>
+  <div class="nav-logo">NB<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">Qui suis-je</a></li>
+    <li><a href="#projects">Projets</a></li>
+    <li><a href="#skills">Compétences</a></li>
+    <li><a href="#experience">Mon parcours</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-badge"><span class="badge-dot"></span>BTS SIO · Option SISR · ESUP Paris 2025–2027</div>
+      <div class="hero-name">Nathan<br>Bilongo</div>
+      <div class="hero-role">Technicien Support &amp; Réseaux</div>
+      <div class="hero-highlight">💡 <strong>Mon atout :</strong> Mon expérience dans le commerce et le management (4 années dans le groupe LVMH avec un diplôme de management) me permet d'allier des compétences techniques solides à une vraie aisance relationnelle — indispensable pour le support utilisateur.</div>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn-primary">Voir mes projets →</a>
+        <a href="mailto:nathanBK@outlook.fr" class="btn-ghost">Me contacter</a>
+      </div>
+    </div>
+    <div class="id-card">
+      <div class="id-card-stripe"></div>
+      <div class="id-card-body">
+        <div class="id-initials">NB</div>
+        <div class="id-name">Nathan Bilongo</div>
+        <div class="id-sub">Alternance · 2j école / 3j entreprise</div>
+        <div class="id-rows">
+          <div class="id-row"><div class="id-row-icon">📞</div><div><span class="id-row-key">Téléphone</span><span class="id-row-val">07 82 33 58 92</span></div></div>
+          <div class="id-row"><div class="id-row-icon">✉️</div><div><span class="id-row-key">Email</span><span class="id-row-val"><a href="mailto:nathanBK@outlook.fr">nathanBK@outlook.fr</a></span></div></div>
+          <div class="id-row"><div class="id-row-icon">🔗</div><div><span class="id-row-key">LinkedIn</span><span class="id-row-val"><a href="http://linkedin.com/in/nathan-bilongo-9a1a7a235" target="_blank">nathan-bilongo-9a1a7a235</a></span></div></div>
+          <div class="id-row"><div class="id-row-icon">🌍</div><div><span class="id-row-key">Anglais</span><span class="id-row-val">Courant — Niveau C1</span></div></div>
+          <div class="id-row"><div class="id-row-icon">🚗</div><div><span class="id-row-key">Permis</span><span class="id-row-val">Permis B</span></div></div>
+        </div>
+        <div class="id-divider"></div>
+        <div class="id-stats">
+          <div class="id-stat"><span class="id-stat-n">3</span><span class="id-stat-l">Projets IT</span></div>
+          <div class="id-stat"><span class="id-stat-n">2</span><span class="id-stat-l">Certifications</span></div>
+          <div class="id-stat"><span class="id-stat-n">C1</span><span class="id-stat-l">Anglais</span></div>
+          <div class="id-stat"><span class="id-stat-n">4+</span><span class="id-stat-l">Ans d'exp.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="about">
+  <div class="reveal"><p class="section-label">// À propos</p><h2 class="section-title">Qui suis-je ?</h2></div>
+  <div class="about-grid reveal">
+    <div class="about-card">
+      <div class="about-info-row"><span class="key">Nom</span> Nathan Bilongo</div>
+      <div class="about-info-row"><span class="key">Âge</span> 25 ans</div>
+      <div class="about-info-row"><span class="key">Formation</span> BTS SIO — SISR</div>
+      <div class="about-info-row"><span class="key">École</span> ESUP Paris (2025–2027)</div>
+      <div class="about-divider"></div>
+      <div class="about-info-row"><span class="key">Permis</span> Permis B</div>
+      <div class="about-info-row"><span class="key">Anglais</span> Courant — Niveau C1</div>
+      <div class="about-divider"></div>
+      <div class="about-info-row"><span class="key">Rythme</span> 2 jours en école / 3 jours en entreprise</div>
+      <div class="about-info-row"><span class="key">Email</span> nathanBK@outlook.fr</div>
+    </div>
+    <div class="about-text">
+      <p>Passionné d'informatique et de réseaux, j'ai choisi la filière SISR pour me spécialiser dans les <strong>infrastructures, le support utilisateur et l'administration des systèmes</strong>. Je maîtrise les environnements Windows Server, Active Directory, ainsi que les outils ITSM comme ServiceNow, GLPI et Jira.</p>
+      <p>Mon parcours est atypique et c'est ma force : avant de me reconvertir dans l'IT, j'ai développé une vraie expérience professionnelle dans le <strong>commerce, l'accueil et la relation client</strong> — notamment chez LVMH (4 ans). Ces expériences m'ont appris à communiquer avec clarté, gérer des situations sous pression et m'adapter à tout type d'interlocuteur, des compétences directement transférables au <strong>support technique N1/N2</strong>.</p>
+      <div class="value-cards">
+        <div class="value-card"><div class="value-card-icon">⚙️</div><div class="value-card-title">Hard skills IT</div><div class="value-card-desc">Active Directory, VLAN Cisco, Windows Server, GLPI/ServiceNow, DHCP/DNS, Azure AD, Office 365.</div></div>
+        <div class="value-card"><div class="value-card-icon">🧠</div><div class="value-card-title">Rigueur &amp; communication</div><div class="value-card-desc">Écoute active, reformulation, vulgarisation technique — essentiels au support N1/N2.</div></div>
+        <div class="value-card"><div class="value-card-icon">📊</div><div class="value-card-title">Culture professionnelle</div><div class="value-card-desc">Mon passé en management m'a appris à prioriser, coordonner et tenir des engagements dans des environnements exigeants.</div></div>
+        <div class="value-card"><div class="value-card-icon">🌍</div><div class="value-card-title">Bilingue</div><div class="value-card-desc">Anglais courant C1 — documentation technique, contexte international, équipes anglophones.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="projects">
+  <div class="reveal"><p class="section-label">// Projets</p><h2 class="section-title">Mes réalisations</h2><p class="section-sub">Projets techniques réalisés en BTS SIO SISR.</p></div>
+  <div class="projects-grid">
+    <div class="project-card c1 reveal">
+      <span class="project-status">Terminé</span>
+      <div class="project-card-header"><div class="project-icon-wrap">🌐</div></div>
+      <p class="project-type">Réseau — Infrastructure</p>
+      <h3 class="project-title">Segmentation VLAN en entreprise</h3>
+      <p class="project-desc">Conception et déploiement d'un <strong>lab réseau d'entreprise complet</strong> sous Cisco Packet Tracer.</p>
+      <div class="project-details">
+        <div class="project-details-title">Ce que j'ai mis en place</div>
+        <div class="project-detail-item">VLANs distincts (RH, Technique, Direction, Invités)</div>
+        <div class="project-detail-item">Routage inter-VLAN via routeur Cisco (Router-on-a-Stick)</div>
+        <div class="project-detail-item">ACL pour filtrer le trafic entre VLANs</div>
+        <div class="project-detail-item">Trunks 802.1Q et documentation technique</div>
+      </div>
+      <div class="project-tags"><span class="project-tag">Cisco Packet Tracer</span><span class="project-tag">VLAN 802.1Q</span><span class="project-tag">ACL</span></div>
+    </div>
+    <div class="project-card c2 reveal">
+      <span class="project-status">Terminé</span>
+      <div class="project-card-header"><div class="project-icon-wrap">🖥️</div></div>
+      <p class="project-type">Administration système</p>
+      <h3 class="project-title">Infrastructure Active Directory &amp; Windows Server</h3>
+      <p class="project-desc">Déploiement d'une <strong>infrastructure d'entreprise complète</strong> sous Windows Server avec GPO.</p>
+      <div class="project-details">
+        <div class="project-details-title">Ce que j'ai mis en place</div>
+        <div class="project-detail-item">Windows Server comme contrôleur de domaine</div>
+        <div class="project-detail-item">Active Directory : comptes, groupes, OU</div>
+        <div class="project-detail-item">GPO, DHCP/DNS et Azure AD Connect</div>
+      </div>
+      <div class="project-tags"><span class="project-tag">Windows Server 2022</span><span class="project-tag">Active Directory</span><span class="project-tag">GPO</span><span class="project-tag">Azure AD</span></div>
+    </div>
+    <div class="project-card c3 reveal">
+      <span class="project-status">Terminé</span>
+      <div class="project-card-header"><div class="project-icon-wrap">🎫</div></div>
+      <p class="project-type">Support ITSM</p>
+      <h3 class="project-title">Gestion de parc &amp; ticketing GLPI / ServiceNow</h3>
+      <p class="project-desc">Mise en place d'un <strong>système ITSM complet</strong> pour simuler un environnement de support réel.</p>
+      <div class="project-details">
+        <div class="project-details-title">Ce que j'ai mis en place</div>
+        <div class="project-detail-item">GLPI sur serveur Debian (stack LAMP)</div>
+        <div class="project-detail-item">Cycle complet tickets, SLA, FusionInventory</div>
+        <div class="project-detail-item">ServiceNow et Jira, procédures ITIL</div>
+      </div>
+      <div class="project-tags"><span class="project-tag">GLPI</span><span class="project-tag">ServiceNow</span><span class="project-tag">ITIL</span><span class="project-tag">Linux Debian</span></div>
+    </div>
+  </div>
+</section>
+<section id="skills">
+  <div class="reveal">
+    <p class="section-label">// Compétences</p>
+    <h2 class="section-title">Ce que je sais faire</h2>
+    <p class="section-sub">Survolez un domaine pour mettre en valeur les compétences correspondantes.</p>
+  </div>
+  <div class="hex-section">
+    <div class="hex-grid reveal">
+      <div class="hex-card" data-detail="reseaux"><div class="hex-icon">🌐</div><div class="hex-name">Réseaux<br>VLAN · DNS</div></div>
+      <div class="hex-card" data-detail="systemes"><div class="hex-icon">🖥️</div><div class="hex-name">Windows<br>Server · AD</div></div>
+      <div class="hex-card" data-detail="support"><div class="hex-icon">🎫</div><div class="hex-name">Support<br>N1 · N2</div></div>
+      <div class="hex-card" data-detail="systemes"><div class="hex-icon">🔒</div><div class="hex-name">Active<br>Directory</div></div>
+      <div class="hex-card" data-detail="support"><div class="hex-icon">📋</div><div class="hex-name">GLPI<br>ServiceNow</div></div>
+      <div class="hex-card" data-detail="systemes"><div class="hex-icon">☁️</div><div class="hex-name">Azure AD<br>Office 365</div></div>
+      <div class="hex-card" data-detail="reseaux"><div class="hex-icon">📡</div><div class="hex-name">Cisco<br>Packet Tracer</div></div>
+      <div class="hex-card" data-detail="systemes"><div class="hex-icon">🐧</div><div class="hex-name">Linux<br>Debian</div></div>
+    </div>
+    <div class="hex-detail-row reveal">
+      <div class="hex-detail" id="detail-reseaux">
+        <div class="hex-detail-top"><div class="hex-detail-icon">🌐</div><div class="hex-detail-title">Réseaux</div></div>
+        <div class="hex-detail-tags">
+          <span class="hex-dtag">VLAN</span><span class="hex-dtag">Routage inter-VLAN</span>
+          <span class="hex-dtag">DHCP · DNS</span><span class="hex-dtag">ACL Cisco</span>
+          <span class="hex-dtag">Wireshark</span><span class="hex-dtag">802.1Q Trunk</span>
+          <span class="hex-dtag">ping · tracert</span>
+        </div>
+      </div>
+      <div class="hex-detail" id="detail-systemes">
+        <div class="hex-detail-top"><div class="hex-detail-icon">🖥️</div><div class="hex-detail-title">Systèmes</div></div>
+        <div class="hex-detail-tags">
+          <span class="hex-dtag">Windows 10/11</span><span class="hex-dtag">Windows Server 2022</span>
+          <span class="hex-dtag">Active Directory</span><span class="hex-dtag">Azure AD</span>
+          <span class="hex-dtag">GPO</span><span class="hex-dtag">Linux Debian</span>
+          <span class="hex-dtag">VMware</span>
+        </div>
+      </div>
+      <div class="hex-detail" id="detail-support">
+        <div class="hex-detail-top"><div class="hex-detail-icon">🎫</div><div class="hex-detail-title">Support &amp; ITSM</div></div>
+        <div class="hex-detail-tags">
+          <span class="hex-dtag">Support N1/N2</span><span class="hex-dtag">GLPI</span>
+          <span class="hex-dtag">ServiceNow</span><span class="hex-dtag">Jira</span>
+          <span class="hex-dtag">Office 365</span><span class="hex-dtag">ITIL</span>
+          <span class="hex-dtag">FusionInventory</span>
+        </div>
+      </div>
+    </div>
+    <div class="certif-strip reveal">
+      <div class="certif-strip-item">
+        <div class="certif-strip-badge">🌐</div>
+        <div><div class="certif-strip-name">Cisco Packet Tracer</div><div class="certif-strip-desc">Cisco NetAcad — Configuration et simulation de réseaux d'entreprise.</div></div>
+      </div>
+      <div class="certif-strip-item">
+        <div class="certif-strip-badge">🛡️</div>
+        <div><div class="certif-strip-name">MOOC Cybersécurité — ANSSI</div><div class="certif-strip-desc">Formation officielle : menaces, bonnes pratiques, gestion des risques.</div></div>
+      </div>
+      <div class="certif-strip-item">
+        <div class="certif-strip-badge">📊</div>
+        <div><div class="certif-strip-name">Titre Pro Management</div><div class="certif-strip-desc">GRETA Saint-Denis — Niveau 4 : gestion d'équipe et pilotage d'unité marchande.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="experience">
+  <div class="reveal"><p class="section-label">// Expériences</p><h2 class="section-title">Mon parcours</h2></div>
+  <div class="soft-banner reveal">
+    <div class="soft-banner-icon">💼</div>
+    <div><div class="soft-banner-title">Un profil qui sort du lot</div><div class="soft-banner-desc">Avant l'informatique, j'ai travaillé <strong>plus de 4 ans dans le commerce haut de gamme</strong> chez LVMH. Mon <strong>Titre Professionnel de Management</strong> m'a forgé des soft skills solides — communication, rigueur, sens du service — directement utiles pour le support utilisateur.</div></div>
+  </div>
+  <div class="timeline reveal">
+    <div class="timeline-item"><div class="timeline-dot"></div><p class="timeline-date">2025 — 2027</p><h3 class="timeline-title">BTS SIO — Option SISR</h3><p class="timeline-company">ESUP Paris · 2 jours en école / 3 jours en entreprise</p><p class="timeline-desc">Formation spécialisée en <strong>Systèmes et Réseaux</strong> : administration système, réseaux Cisco, Active Directory, support utilisateur et outils ITSM.</p><div class="timeline-tags"><span class="project-tag">BTS SIO SISR</span><span class="project-tag">ESUP Paris</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot d2"></div><p class="timeline-date">2019 — 2023</p><h3 class="timeline-title">Vendeur &amp; Hôte de caisse polyvalent</h3><p class="timeline-company">Groupe LVMH — Grande Épicerie de Paris Rive Droite</p><p class="timeline-desc"><strong>4 ans en environnement haut de gamme</strong> : sens du service, rigueur, gestion de situations complexes.</p><div class="timeline-tags"><span class="project-tag">Relation client</span><span class="project-tag">Commerce de luxe</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot d3"></div><p class="timeline-date">2020 — 2021</p><h3 class="timeline-title">Titre Pro Management d'Univers Marchand</h3><p class="timeline-company">GRETA Saint-Denis</p><p class="timeline-desc"><strong>Gestion d'équipe, animation de rayon, pilotage d'unité marchande</strong> — culture de la responsabilité transposable en IT.</p><div class="timeline-tags"><span class="project-tag">Management</span><span class="project-tag">Leadership</span></div></div>
+  </div>
+</section>
+<section id="contact">
+  <div class="contact-grid">
+    <div class="reveal-left">
+      <p class="section-label">// Contact</p>
+      <h2 class="section-title">Contactez-moi</h2>
+      <p style="color:var(--muted);font-size:0.95rem;margin-bottom:1.5rem;">Je recherche une alternance au rythme 2 jours en école / 3 jours en entreprise dès la rentrée 2025.</p>
+      <div class="contact-methods">
+        <a href="mailto:nathanBK@outlook.fr" class="contact-method"><span class="contact-icon">✉️</span><div><p class="contact-label">Email</p><p class="contact-val">nathanBK@outlook.fr</p></div></a>
+        <a href="tel:0782335892" class="contact-method"><span class="contact-icon">📞</span><div><p class="contact-label">Téléphone</p><p class="contact-val">07 82 33 58 92</p></div></a>
+        <a href="http://linkedin.com/in/nathan-bilongo-9a1a7a235" class="contact-method" target="_blank"><span class="contact-icon">🔗</span><div><p class="contact-label">LinkedIn</p><p class="contact-val">nathan-bilongo-9a1a7a235</p></div></a>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" placeholder="Jean Dupont"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="jean@entreprise.fr"></div>
+      <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" placeholder="Bonjour Nathan, je suis intéressé par votre profil..."></textarea></div>
+      <a href="mailto:nathanBK@outlook.fr" class="btn-primary" style="text-align:center;">Envoyer →</a>
+    </div>
+  </div>
+</section>
+<footer>Portfolio de <span>Nathan Bilongo</span> · BTS SIO SISR · ESUP Paris 2025–2027</footer>
+<script>
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mouseX=0,mouseY=0,ringX=0,ringY=0;
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;cursor.style.left=mouseX+'px';cursor.style.top=mouseY+'px';});
+(function animRing(){ringX+=(mouseX-ringX)*.12;ringY+=(mouseY-ringY)*.12;ring.style.left=ringX+'px';ring.style.top=ringY+'px';requestAnimationFrame(animRing);})();
+document.querySelectorAll('a,button,.project-card,.value-card,.contact-method,.hex-card,.hex-dtag,.hex-detail').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));});
+const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+let W,H,particles=[],mouse={x:-999,y:-999};
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+window.addEventListener('resize',resize);resize();
+for(let i=0;i<70;i++) particles.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.55,vy:(Math.random()-.5)*.55,r:Math.random()*2.5+1,alpha:Math.random()*.5+.15,pulse:Math.random()*Math.PI*2,ps:.01+Math.random()*.02});
+document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+function drawCanvas(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<particles.length;i++){
+    particles[i].pulse+=particles[i].ps;
+    const pr=particles[i].r*(1+.3*Math.sin(particles[i].pulse));
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<140){ctx.beginPath();ctx.strokeStyle=`rgba(21,101,192,${.22*(1-d/140)})`;ctx.lineWidth=.7;ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}
+    }
+    const mdx=particles[i].x-mouse.x,mdy=particles[i].y-mouse.y,md=Math.sqrt(mdx*mdx+mdy*mdy);
+    if(md<180){ctx.beginPath();ctx.strokeStyle=`rgba(2,136,209,${.4*(1-md/180)})`;ctx.lineWidth=1.2;ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke();particles[i].x-=mdx/md*.3;particles[i].y-=mdy/md*.3;}
+    ctx.beginPath();ctx.arc(particles[i].x,particles[i].y,pr,0,Math.PI*2);ctx.fillStyle=`rgba(21,101,192,${particles[i].alpha})`;ctx.fill();
+    particles[i].x+=particles[i].vx;particles[i].y+=particles[i].vy;
+    if(particles[i].x<0||particles[i].x>W)particles[i].vx*=-1;
+    if(particles[i].y<0||particles[i].y>H)particles[i].vy*=-1;
+  }
+  requestAnimationFrame(drawCanvas);
+}
+drawCanvas();
+const obs=new IntersectionObserver((entries)=>{entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*80);});},{threshold:.1});
+document.querySelectorAll('.reveal,.reveal-left').forEach(r=>obs.observe(r));
+const secs=document.querySelectorAll('section[id]'),navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-250)cur=s.id;});navLinks.forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});},{passive:true});
+
+document.querySelectorAll('.hex-card').forEach(card => {
+  const key = card.dataset.detail;
+  const panel = document.getElementById('detail-' + key);
+  card.addEventListener('mouseenter', () => { if(panel) panel.classList.add('highlighted'); });
+  card.addEventListener('mouseleave', () => { if(panel) panel.classList.remove('highlighted'); });
+});
+</script>
+</body>
+</html>
