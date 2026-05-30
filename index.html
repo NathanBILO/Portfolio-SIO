@@ -2,10 +2,42 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; URL=Portfolio_SIO.html">
-    <title>Redirection vers le portfolio</title>
+    <meta http-equiv="refresh" content="1; URL=Portfolio_SIO.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirection...</title>
+
+    <style>
+        body {
+            background: #f4f8ff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #1a3d7c;
+        }
+        .loader {
+            border: 4px solid #dce6ff;
+            border-top: 4px solid #1a3d7c;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        p {
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
-    <p>Redirection vers le portfolio...</p>
+    <div class="loader"></div>
+    <p>Chargement du portfolio...</p>
 </body>
 </html>
